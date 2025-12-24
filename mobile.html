@@ -2,17 +2,19 @@
   @Project: Christmas Tree 3D (Mobile Version)
   @Author: tanbaycu
   @Date: 2025-12-24
+  @Description: Exact visual clone of index.html optimized for Mobile Touch interactions.
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Magical 3D Christmas Tree - Mobile</title>
+    <title>Magical 3D Christmas Tree - Mobile Experience</title>
     
-    <!-- Redirect to PC if not mobile -->
+    <!-- Redirect Desktop users back to index.html -->
     <script>
         if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // Only redirect if NOT mobile
             window.location.href = "index.html" + window.location.search;
         }
     </script>
@@ -23,7 +25,7 @@
     <meta name="author" content="tanbaycu">
     <link rel="icon" type="image/png" href="./images/image.png">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://caythongnoem.vercel.app/mobile.html">
     <meta property="og:title" content="Magical 3D Christmas Tree - Mobile Experience">
@@ -34,47 +36,28 @@
         body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Times New Roman', serif; touch-action: none; }
         #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         
-        /* UI Overlay */
+        /* UI Overlay - Adjusted for Mobile */
         #ui-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; pointer-events: none;
             display: flex; flex-direction: column; 
             align-items: center;
-            padding-top: 20px;
+            padding-top: 15px; /* Reduced padding */
             box-sizing: border-box;
             transition: opacity 0.5s ease;
         }
         
-        /* Tap Instruction hint */
-        #hint-overlay {
-            position: absolute; bottom: 100px; width: 100%; text-align: center;
-            color: rgba(255,255,255,0.6); font-family: sans-serif; font-size: 14px;
-            pointer-events: none; animation: pulse 2s infinite;
+        #wishes-container {
+            margin-top: 5px;
+            color: #fceea7; font-family: 'Cinzel', serif; font-size: 14px; /* Smaller font */
+            text-align: center; padding: 0 10px;
+            text-shadow: 0 0 10px rgba(252, 238, 167, 0.4);
         }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* Loading */
-        #loader {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease-out;
-        }
-        .loader-text {
-            color: #d4af37; font-size: 14px; letter-spacing: 2px; margin-top: 20px;
-            text-transform: uppercase; font-weight: 300;
-            text-align: center;
-        }
-        .spinner {
-            width: 40px; height: 40px; border: 2px solid rgba(212, 175, 55, 0.1); 
-            border-top: 2px solid #d4af37; border-radius: 50%; 
-            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         /* Typography */
         h1 { 
-            color: #fceea7; font-size: 32px; margin: 0; font-weight: 400; 
+            color: #fceea7; font-size: 32px; /* Smaller title */
+            margin: 0; font-weight: 400; 
             letter-spacing: 2px; 
             text-shadow: 0 0 20px rgba(252, 238, 167, 0.6); 
             background: linear-gradient(to bottom, #fff, #eebb66);
@@ -82,52 +65,90 @@
             font-family: 'Cinzel', 'Times New Roman', serif;
         }
 
-        /* Controls - Moving to Bottom for easier reach */
+        /* Controls - Bottom Bar for Thumb Access */
         .controls-wrapper {
             position: absolute; 
-            bottom: 20px; left: 0; width: 100%;        
+            bottom: 20px; left: 0; right: 0;        
             pointer-events: auto;
             display: flex;
-            flex-direction: row;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             z-index: 20;
             padding: 10px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
         }
 
         .upload-btn {
-            background: rgba(0,0,0,0.7); 
+            background: rgba(0,0,0,0.6); 
             border: 2px solid #d4af37; 
             color: #d4af37; 
-            padding: 10px 15px; 
+            padding: 12px 20px; 
             cursor: pointer; 
             text-transform: uppercase; 
             font-family: 'Press Start 2P', cursive;
-            font-size: 10px;
-            border-radius: 20px; /* Rounded for touch */
+            font-size: 10px; /* Readable on mobile */
+            border-radius: 25px;
             display: flex; align-items: center; justify-content: center;
-            min-height: 44px; /* Touch target size */
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
         }
+        .upload-btn:active { transform: scale(0.95); background: #d4af37; color: #000; }
         
-        #wishes-container {
-            margin-top: 10px;
-            color: #fceea7; font-family: 'Cinzel', serif; font-size: 14px;
-            text-align: center; padding: 0 20px;
-        }
-
         input[type="file"] { display: none; }
         
-        /* Share Modal (Copied from PC but improved for small screens) */
-        /* Author Attribution - Mobile: Integrated in Share or subtle */
+        /* Gift Overlay - Centered */
+        #gift-overlay {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: #ffd700;
+            font-family: 'Cinzel', serif;
+            display: none;
+            z-index: 300;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            width: 85%;
+            max-width: 320px;
+        }
+        #gift-title { font-size: 16px; color: #fff; margin-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 8px; }
+        #gift-message { font-size: 18px; line-height: 1.4; margin-bottom: 20px; color: #fff; }
+        .close-gift {
+            background: #d4af37; border: none; color: #000; padding: 10px 20px; 
+            cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 10px;
+            border-radius: 5px; box-shadow: 0 4px 0 #996515;
+        }
+        .close-gift:active { transform: translateY(4px); box-shadow: none; }
+
+        /* Loader */
+        #loader {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease-out;
+        }
+        .spinner { width: 40px; height: 40px; border: 2px solid rgba(212,175,55,0.1); border-top: 2px solid #d4af37; border-radius: 50%; animation: spin 1s infinite linear; }
+        .loader-text { color: #d4af37; font-size: 12px; margin-top: 15px; font-family: sans-serif; letter-spacing: 1px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        /* Hint */
+        #tap-hint {
+            position: absolute; bottom: 80px; width: 100%; text-align: center;
+            color: rgba(255,255,255,0.5); font-size: 10px; font-family: sans-serif;
+            pointer-events: none; animation: fadeHint 3s infinite;
+        }
+        @keyframes fadeHint { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
     </style>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
     </style>
-
+    
+     <!-- Import Map (Same as Index) -->
     <script type="importmap">
         {
             "imports": {
@@ -141,7 +162,7 @@
 
     <div id="loader">
         <div class="spinner"></div>
-        <div class="loader-text" id="loader-text">Loading Details...</div>
+        <div class="loader-text" id="loader-text">Loading Magic...</div>
     </div>
 
     <div id="canvas-container"></div>
@@ -150,12 +171,11 @@
         <h1>Merry Christmas</h1>
         <div id="wishes-container">May your days be merry!</div>
         
-        <div id="hint-overlay">Tap gifts to open 🎁</div>
+        <div id="tap-hint">Tap gifts to open • Drag to rotate</div>
 
         <div class="controls-wrapper">
-             <!-- Mobile: Only key actions -->
              <label class="upload-btn">
-                Add Photos
+                Photos
                 <input type="file" id="file-input" multiple accept="image/*">
             </label>
             
@@ -164,7 +184,15 @@
             </div>
         </div>
     </div>
+    
+    <!-- Using exact same overlay HTML as index -->
+    <div id="gift-overlay">
+        <div id="gift-title">🎁 You opened a gift!</div>
+        <div id="gift-message">Message</div>
+        <button class="close-gift" onclick="window.closeGift()">Thanks!</button>
+    </div>
 
+    <!-- MAIN SCRIPT -->
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -173,7 +201,7 @@
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
         import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'; 
 
-        // --- Core Configuration ---
+        // --- Configuration (Same logic, slightly lighter for mobile) ---
         const CONFIG = {
             colors: {
                 bg: 0x000000, 
@@ -182,23 +210,22 @@
                 accentRed: 0x990000,     
             },
             particles: {
-                count: 800,      // Reduced for mobile
-                dustCount: 1000, // Reduced for mobile
+                count: 1000,     // Reduced from 1500 for mobile FPS
+                dustCount: 1500, // Reduced from 2500
                 treeHeight: 24,  
                 treeRadius: 8    
             },
             camera: { z: 50 },
             preload: {
-                images: [
-                    './images/meme1.jpg', './images/meme2.jpg', './images/meme3.jpg', './images/meme4.jpg'
-                ]
+                images: [ './images/meme1.jpg', './images/meme2.jpg', './images/meme3.jpg', './images/meme4.jpg' ]
             }
         };
 
         const STATE = {
             mode: 'TREE', 
             focusTarget: null,
-            giftOpen: false 
+            giftOpen: false,
+            rotation: { x: 0, y: 0 }
         };
 
         let scene, camera, renderer, composer, controls;
@@ -206,84 +233,84 @@
         let particleSystem = []; 
         let photoMeshGroup = new THREE.Group();
         let caneTexture; 
+        
+        // Touch Interaction Globals
         const raycaster = new THREE.Raycaster();
         const touchMouse = new THREE.Vector2();
 
-        const christmasWishes = [
-            "May your holidays be filled with warmth! ✨",
-            "Wishing you love and harmony. 🎄",
-            "Sparkle with moments of love. 🌟",
-            "Have a holly, jolly Christmas! 🎅",
-            "Peace, Joy, and Love to you. ❤️"
+        // Data Arrays (Exact Copies)
+        const giftMessages = [
+            "🎁 Unboxing Joy: May your days be filled with laughter!",
+            "🎁 A Gift of Peace: Wishing you serene moments.",
+            "🎁 Adventure Awaits: May the new year bring excitement!",
+            "🎁 Sweetest Wishes: Hope your holidays are sweet!",
+            "🎁 Golden Moments: Cherish every second!",
+            "🎁 Sparkle & Shine: May you glow with happiness!",
+            "🎁 Cozy Vibes: Sending warm hugs!",
+            "🎁 Dream Big: Inspiration for your goals!",
+            "🎁 Love Wrapped Up: You are cherished!",
+            "🎁 Magic Inside: Believe in the wonder!",
+            "🎁 Good Vibes Only: Radiating positivity!",
+            "🎁 A Bundle of Luck: May fortune smile!",
+            "🎁 Creative Spark: You are a genius!",
+            "🎁 Friendship Goal: Grateful for you!",
+            "🎁 Health & Harmony: Wishing you balance!"
         ];
         
-        const giftMessages = [
-            "🎁 Unboxing Joy: Endless laughter!",
-            "🎁 Peace: Serene moments.",
-            "🎁 Adventure Awaits: Exciting journeys!",
-            "🎁 Sweetest Wishes: Sweet as cookies!",
-            "🎁 Golden Moments: Cherish loved ones!",
-            "🎁 Sparkle & Shine: Glow with happiness!",
-            "🎁 Cozy Vibes: Warm hugs!",
-            "🎁 Dream Big: Inspiration inside!",
-            "🎁 Love Wrapped Up: You are cherished!",
-            "🎁 Magic Inside: Believe!",
-            "🎁 Good Vibes Only: Positivity!",
-            "🎁 Luck: Fortune smiles upon you!",
-            "🎁 Creative Spark: Genius!",
-            "🎁 Friendship: Grateful for you!",
-            "🎁 Health: Vibrant life!"
+        const christmasWishes = [
+            "May your holidays be filled with warmth and cheer! ✨",
+            "Wishing you a season of love and harmony. 🎄",
+            "May your Christmas sparkle with moments of love. 🌟",
+            "Have a holly, jolly Christmas! 🎅",
+            "Peace, Joy, and Love to you. ❤️"
         ];
 
         const urlParams = new URLSearchParams(window.location.search);
         const userName = urlParams.get('name');
 
+        window.closeGift = function() {
+            document.getElementById('gift-overlay').style.display = 'none';
+            STATE.giftOpen = false;
+            STATE.focusTarget = null;
+            STATE.mode = 'TREE'; 
+            if(controls) controls.autoRotate = true; // Resume rotation
+        };
+
         function init() {
-            try {
-                if (userName) {
-                    const h1 = document.querySelector('h1');
-                    if(h1) h1.innerText = `Merry Christmas, ${userName}!`;
-                }
-
-                document.getElementById('wishes-container').innerText = christmasWishes[Math.floor(Math.random() * christmasWishes.length)];
-                
-                initThree();
-                setupEnvironment(); 
-                setupLights();
-                createTextures();
-                createParticles(); 
-                createDust();     
-                createGiftBoxes(); 
-                loadPredefinedImages();
-                setupPostProcessing();
-                setupEvents(); // Touch events here
-                
-                const loader = document.getElementById('loader');
-                loader.style.opacity = 0;
-                setTimeout(() => { if(loader) loader.remove(); }, 800);
-
-                animate();
-            } catch (error) {
-                alert("Error initializing: " + error.message);
+            // Header
+            if (userName) {
+                const h1 = document.querySelector('h1');
+                if(h1) h1.innerText = `Merry Christmas, ${userName}!`;
             }
-        }
+            document.getElementById('wishes-container').innerText = christmasWishes[Math.floor(Math.random() * christmasWishes.length)];
+            
+            initThree();
+            setupEnvironment(); 
+            setupLights();
+            createTextures();
+            createParticles(); 
+            createDust();     
+            createGiftBoxes(); 
+            loadPredefinedImages();
+            setupPostProcessing();
+            setupTouchEvents(); // Replaces WebCam events
+            
+            // Remove Loader
+            const loader = document.getElementById('loader');
+            loader.style.opacity = 0;
+            setTimeout(() => { if(loader) loader.remove(); }, 800);
 
-        // --- Simplified Image Loading ---
-        function loadPredefinedImages() {
-            const loader = new THREE.TextureLoader();
-            CONFIG.preload.images.forEach(url => {
-                loader.load(url, (t) => { t.colorSpace = THREE.SRGBColorSpace; addPhotoToScene(t); });
-            });
+            animate();
         }
 
         function initThree() {
             const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
             scene.background = new THREE.Color(CONFIG.colors.bg);
-            scene.fog = new THREE.FogExp2(CONFIG.colors.bg, 0.015); 
+            scene.fog = new THREE.FogExp2(CONFIG.colors.bg, 0.012); 
 
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 5, CONFIG.camera.z); 
+            camera.position.set(0, 3, CONFIG.camera.z); // Slightly higher/further
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -291,34 +318,33 @@
             renderer.toneMapping = THREE.ReinhardToneMapping; 
             container.appendChild(renderer.domElement);
             
-            // Orbit Controls for Touch Rotation
+            // Touch Controls (Orbit)
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.autoRotate = true;
-            controls.autoRotateSpeed = 1.0;
+            controls.autoRotateSpeed = 0.8;
             controls.enableZoom = true;
             controls.enablePan = false;
-            controls.minDistance = 10;
-            controls.maxDistance = 80;
+            controls.maxDistance = 70;
+            controls.minDistance = 20;
 
             mainGroup = new THREE.Group();
             scene.add(mainGroup);
         }
 
+        // --- Visual Setup (Identical to PC) ---
         function setupEnvironment() {
             const pmremGenerator = new THREE.PMREMGenerator(renderer);
             scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
         }
-
         function setupLights() {
-            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambient);
-            const spotGold = new THREE.SpotLight(0xffcc66, 1200);
-            spotGold.position.set(30, 40, 40);
-            scene.add(spotGold);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6); scene.add(ambient);
+            const innerLight = new THREE.PointLight(0xffaa00, 2, 20); innerLight.position.set(0, 5, 0); mainGroup.add(innerLight);
+            const spotGold = new THREE.SpotLight(0xffcc66, 1200); spotGold.position.set(30, 40, 40); scene.add(spotGold);
+            const spotBlue = new THREE.SpotLight(0x6688ff, 600); spotBlue.position.set(-30, 20, -30); scene.add(spotBlue);
+            const fill = new THREE.DirectionalLight(0xffeebb, 0.8); fill.position.set(0, 0, 50); scene.add(fill);
         }
-
         function setupPostProcessing() {
             const renderScene = new RenderPass(scene, camera);
             const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
@@ -327,216 +353,22 @@
             composer.addPass(renderScene);
             composer.addPass(bloomPass);
         }
-
         function createTextures() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 128; canvas.height = 128;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,128,128);
+            const canvas = document.createElement('canvas'); canvas.width = 128; canvas.height = 128;
+            const ctx = canvas.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,128,128);
             ctx.fillStyle = '#880000'; ctx.beginPath();
             for(let i=-128; i<256; i+=32) { ctx.moveTo(i, 0); ctx.lineTo(i+32, 128); ctx.lineTo(i+16, 128); ctx.lineTo(i-16, 0); }
             ctx.fill();
             caneTexture = new THREE.CanvasTexture(canvas);
             caneTexture.wrapS = THREE.RepeatWrapping; caneTexture.wrapT = THREE.RepeatWrapping; caneTexture.repeat.set(3, 3);
         }
-
-        // --- Simplified Particle Class for Mobile ---
-        class Particle {
-            constructor(mesh, type, isDust = false) {
-                this.mesh = mesh;
-                this.type = type;
-                this.isDust = isDust;
-                this.posTree = new THREE.Vector3();
-                this.baseScale = mesh.scale.x; 
-                this.calculatePositions();
-            }
-
-            calculatePositions() {
-                if (this.type === 'PHOTO') return; // Photos set externally
-                
-                const h = CONFIG.particles.treeHeight;
-                const halfH = h / 2;
-                let t = Math.random(); t = Math.pow(t, 0.8); 
-                const y = (t * h) - halfH;
-                let rMax = CONFIG.particles.treeRadius * (1.0 - t); 
-                if (rMax < 0.5) rMax = 0.5;
-                const angle = t * 50 * Math.PI + Math.random() * Math.PI; 
-                const r = rMax * (0.8 + Math.random() * 0.4); 
-                this.posTree.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
-                
-                // Set initial position
-                this.mesh.position.copy(this.posTree);
-            }
-
-            update(dt, mode, focusTargetMesh) {
-                let target = this.posTree;
-                
-                if (mode === 'FOCUS') {
-                    if (this.mesh === focusTargetMesh) {
-                        // Bring to center, but adjust for mobile screen (higher up)
-                        const desiredWorldPos = new THREE.Vector3(0, 1, 35); // Adjusted Y for mobile
-                        const invMatrix = new THREE.Matrix4().copy(mainGroup.matrixWorld).invert();
-                        target = desiredWorldPos.applyMatrix4(invMatrix);
-                        this.mesh.lookAt(camera.position); // Always face camera
-                    } 
-                }
-
-                const lerpSpeed = (mode === 'FOCUS' && this.mesh === focusTargetMesh) ? 5.0 : 2.0; 
-                this.mesh.position.lerp(target, lerpSpeed * dt);
-
-                // Rotation & Scale Logic
-                if (mode === 'TREE') {
-                    if (this.type === 'PHOTO') {
-                        this.mesh.lookAt(0, this.mesh.position.y, 0);
-                        this.mesh.rotateY(Math.PI);
-                    } else if (this.type === 'GIFT') {
-                         this.mesh.rotation.y += 1.0 * dt;
-                    }
-                }
-                
-                // Animation Logic for Gifts (Open/Close)
-                if (mode === 'FOCUS' && this.mesh === focusTargetMesh && this.type === 'GIFT') {
-                     // Scale up
-                     this.mesh.scale.lerp(new THREE.Vector3(2.0, 2.0, 2.0), 3*dt);
-                     
-                     // Lid Animation
-                     if(this.mesh.userData.lid) {
-                         this.mesh.userData.lid.position.lerp(new THREE.Vector3(0, 2.5, -0.5), 2*dt);
-                         this.mesh.userData.lid.rotation.x = THREE.MathUtils.lerp(this.mesh.userData.lid.rotation.x, -Math.PI/4, 2*dt);
-                     }
-                     // Message
-                     if(this.mesh.userData.messageSprite) {
-                         this.mesh.userData.messageSprite.scale.lerp(new THREE.Vector3(4, 2, 1), 3*dt); // Mobile scale
-                         this.mesh.userData.messageSprite.position.lerp(new THREE.Vector3(0, 1.7, 0), 3*dt); 
-                     }
-                } else if (mode === 'FOCUS' && this.mesh === focusTargetMesh && this.type === 'PHOTO') {
-                    // Mobile scale for Photo
-                    this.mesh.scale.lerp(new THREE.Vector3(this.baseScale*3, this.baseScale*3, this.baseScale*3), 3*dt);
-                } else {
-                    // Not Focused -> Reset scale and state
-                     this.mesh.scale.lerp(new THREE.Vector3(this.baseScale, this.baseScale, this.baseScale), 3*dt);
-                     if(this.type === 'GIFT' && this.mesh.userData.lid) {
-                         this.mesh.userData.lid.position.lerp(new THREE.Vector3(0, 1.0, 0), 4*dt);
-                         this.mesh.userData.lid.rotation.x = THREE.MathUtils.lerp(this.mesh.userData.lid.rotation.x, 0, 4*dt);
-                         if(this.mesh.userData.messageSprite) this.mesh.userData.messageSprite.scale.set(0,0,0);
-                     }
-                }
-            }
+        function loadPredefinedImages() {
+            const loader = new THREE.TextureLoader();
+            CONFIG.preload.images.forEach(url => { loader.load(url, (t) => { t.colorSpace = THREE.SRGBColorSpace; addPhotoToScene(t); }); });
         }
 
-        // --- Core Functions Duplicated/Simplified from Index ---
-        function createParticles() {
-            const geo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
-            for(let i=0; i<CONFIG.particles.count; i++) {
-                const mat = new THREE.MeshStandardMaterial({ 
-                    color: (Math.random()>0.5) ? CONFIG.colors.champagneGold : 0xffffff,
-                    metalness: 0.8, roughness: 0.2
-                });
-                const mesh = new THREE.Mesh(geo, mat);
-                mainGroup.add(mesh);
-                particleSystem.push(new Particle(mesh, 'DECO'));
-            }
-        }
-        function createDust() {
-            const geo = new THREE.BufferGeometry();
-            const pos = [];
-            for(let i=0; i<CONFIG.particles.dustCount; i++) {
-                pos.push((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100);
-            }
-            geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-            const mat = new THREE.PointsMaterial({ color: 0xffffee, size: 0.2, transparent: true, opacity: 0.6 });
-            scene.add(new THREE.Points(geo, mat));
-        }
-
-        function createGiftBoxes() {
-            const boxGeo = new THREE.BoxGeometry(1, 1, 1);
-            const lidGeo = new THREE.BoxGeometry(1.05, 0.2, 1.05);
-            const colors = [CONFIG.colors.accentRed, CONFIG.colors.deepGreen, 0x000080, 0x4B0082];
-
-            for(let i=0; i<12; i++) {
-                 const col = colors[Math.floor(Math.random()*colors.length)];
-                 const mat = new THREE.MeshStandardMaterial({ color: col, metalness: 0.3, roughness: 0.4 });
-                 const box = new THREE.Mesh(boxGeo, mat);
-                 
-                 const lid = new THREE.Mesh(lidGeo, new THREE.MeshStandardMaterial({ color: col, metalness: 0.4 }));
-                 lid.position.y = 1.0; 
-                 box.userData.lid = lid;
-                 box.add(lid);
-
-                 // Message Sprite
-                 const msg = giftMessages[Math.floor(Math.random()*giftMessages.length)];
-                 const sprite = createTextSprite(msg);
-                 sprite.scale.set(0,0,0);
-                 sprite.position.set(0, 1.5, 0);
-                 box.userData.messageSprite = sprite;
-                 box.add(sprite);
-
-                 mainGroup.add(box);
-                 particleSystem.push(new Particle(box, 'GIFT'));
-            }
-        }
-        
-        function createTextSprite(message) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 512; canvas.height = 256;
-            ctx.fillStyle = "#050510"; 
-            ctx.beginPath(); ctx.roundRect(10, 10, 492, 236, 40); ctx.fill();
-            ctx.strokeStyle = "#ffd700"; ctx.lineWidth = 10; ctx.stroke();
-            ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.font = "bold 28px sans-serif"; // Mobile friendly font size
-            
-            // Wrap Text
-            const words = message.split(' ');
-            let line = ''; let lines = [];
-            for(let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + ' ';
-                if(ctx.measureText(testLine).width > 440 && n > 0) { lines.push(line); line = words[n] + ' '; }
-                else { line = testLine; }
-            }
-            lines.push(line);
-            
-            let startY = 128 - ((lines.length-1) * 35)/2;
-            lines.forEach((l, i) => ctx.fillText(l, 256, startY + (i*35)));
-
-            const texture = new THREE.CanvasTexture(canvas);
-            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
-            return new THREE.Sprite(material);
-        }
-
-        function addPhotoToScene(texture) {
-             const aspect = texture.image.width / texture.image.height;
-             const h = 1.2; const w = h * aspect;
-             const geo = new THREE.PlaneGeometry(w, h);
-             const mat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-             const mesh = new THREE.Mesh(geo, mat);
-             
-             // Frame
-             const fGeo = new THREE.BoxGeometry(w+0.1, h+0.1, 0.05);
-             const fMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.champagneGold });
-             const frame = new THREE.Mesh(fGeo, fMat);
-             frame.position.z = -0.05;
-             mesh.add(frame);
-
-             mainGroup.add(mesh);
-             particleSystem.push(new Particle(mesh, 'PHOTO'));
-             updatePhotoLayout();
-        }
-
-        function updatePhotoLayout() {
-            const photos = particleSystem.filter(p => p.type === 'PHOTO');
-            if (photos.length === 0) return;
-            const stepY = CONFIG.particles.treeHeight / (photos.length + 1);
-            photos.forEach((p, i) => {
-                const y = -CONFIG.particles.treeHeight/2 + stepY * (i+1);
-                const r = 6 + (photos.length-i)*0.2; // Cone shape
-                const angle = i * 2.0;
-                p.posTree.set(Math.cos(angle)*r, y, Math.sin(angle)*r);
-            });
-        }
-
-        // --- Interaction Logic (Touch) ---
-        function setupEvents() {
+        // --- Touch Interaction Logic ---
+        function setupTouchEvents() {
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -544,65 +376,74 @@
                 composer.setSize(window.innerWidth, window.innerHeight);
             });
 
+            // Tap Listener
             const canvas = document.getElementById('canvas-container');
-            
             canvas.addEventListener('touchstart', onTouchStart, {passive: false});
-            
-            // File & Share Events
-            document.getElementById('file-input').addEventListener('change', handleImageUpload);
-            document.getElementById('share-btn').addEventListener('click', () => {
-                // Share Logic
-                 let recipient = prompt("Nhập tên người bạn muốn gửi tặng:");
-                 if (recipient === null) return;
-                 let shareUrl = new URL(window.location.href);
-                 if (recipient) shareUrl.searchParams.set('name', recipient);
-                 else shareUrl.searchParams.delete('name');
-                 const msg = `🎄 Merry Christmas ${recipient||''}! ✨\nCheck out this 3D Tree: ${shareUrl.toString()}`;
-                 navigator.clipboard.writeText(msg).then(() => alert("Link copied! 🎅"));
+
+            // Buttons
+             document.getElementById('file-input').addEventListener('change', handleImageUpload);
+             document.getElementById('share-btn').addEventListener('click', () => {
+                let recipient = prompt("Nhập tên người bạn muốn gửi tặng (Recipient Name):");
+                if (recipient === null) return; 
+                let shareUrl = new URL(window.location.href);
+                // Ensure share link points to the universal index, let redirect handle it
+                shareUrl.pathname = shareUrl.pathname.replace('mobile.html', 'index.html');
+                
+                if (recipient) shareUrl.searchParams.set('name', recipient);
+                else shareUrl.searchParams.delete('name');
+                 
+                const msg = `🎄 Merry Christmas ${recipient||''}! ✨\nCheck out this 3D Tree: ${shareUrl.toString()}\n(Developed by tanbaycu)`;
+                navigator.clipboard.writeText(msg).then(() => alert("Link đã được copy! 🎅"));
             });
         }
 
         function onTouchStart(e) {
-            // Prevent default to avoid scrolling
-            // e.preventDefault(); 
-            // Note: Preventing default on canvas might block scroll if needed, but here we want app-like feel.
+            // Only process single touch (tap)
+            if (e.touches.length > 1) return;
+
+            const x = e.touches[0].clientX;
+            const y = e.touches[0].clientY;
             
-            // Get touch coordinates
-            const touch = e.touches[0];
-            touchMouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-            touchMouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+            touchMouse.x = (x / window.innerWidth) * 2 - 1;
+            touchMouse.y = -(y / window.innerHeight) * 2 + 1;
             
             raycaster.setFromCamera(touchMouse, camera);
-            const intersects = raycaster.intersectObjects(mainGroup.children, true); // Recursive since gifts have children
+            const intersects = raycaster.intersectObjects(mainGroup.children, true);
             
+            let hitGiftOrPhoto = false;
+
             if(intersects.length > 0) {
-                // Find parent particle
-                // Move up layout to find specific types
+                // Find visible parent in our particle system
                 let target = intersects[0].object;
-                while(target.parent && target.parent !== mainGroup) {
-                     // Check if target matches a particle mesh
-                     target = target.parent;
-                }
                 
-                // If we hit a Gift or Photo
+                // Climb up to find the root mesh we care about
+                while(target.parent && target.parent !== mainGroup) { target = target.parent; }
+
                 const particle = particleSystem.find(p => p.mesh === target);
+                
                 if(particle && (particle.type === 'GIFT' || particle.type === 'PHOTO')) {
-                    // Start Focus
+                    hitGiftOrPhoto = true;
+                    // TAP ON OBJECT
                     STATE.mode = 'FOCUS';
                     STATE.focusTarget = particle.mesh;
-                    controls.autoRotate = false; // Stop rotating when focused
+                    controls.autoRotate = false; // Pause rotation
+                    
+                    // If focusing on a gift, ensure lid opens visually (handled in update)
                 }
-            } else {
-                // Tapped empty space -> Return to Tree
+            }
+            
+            if (!hitGiftOrPhoto) {
+                // TAP ON BACKGROUND -> Reset
                 if(STATE.mode === 'FOCUS') {
                     STATE.mode = 'TREE';
                     STATE.focusTarget = null;
-                    controls.autoRotate = true; // Resume
+                    controls.autoRotate = true; // Resume rotation
+                    document.getElementById('gift-overlay').style.display = 'none';
                 }
             }
         }
 
-         function handleImageUpload(e) {
+        function handleImageUpload(e) {
             const files = e.target.files;
             if(!files.length) return;
             Array.from(files).forEach(f => {
@@ -618,17 +459,242 @@
             });
         }
 
+        // --- Simplified Particle Class (Visuals Identical) ---
+        class Particle {
+            constructor(mesh, type, isDust = false) {
+                this.mesh = mesh; this.type = type; this.isDust = isDust;
+                this.posTree = new THREE.Vector3(); this.posScatter = new THREE.Vector3();
+                this.baseScale = mesh.scale.x; 
+                this.calculatePositions();
+            }
+            calculatePositions() {
+                if(this.type === 'PHOTO') {
+                     this.posTree.set(0,0,0);
+                     // Simple random scatter pos
+                     const r = 15; const theta = Math.random()*Math.PI*2; const phi = Math.acos(2*Math.random()-1);
+                     this.posScatter.set(r*Math.sin(phi)*Math.cos(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi));
+                     return;
+                }
+                const h = CONFIG.particles.treeHeight; const halfH = h/2;
+                let t = Math.random(); t = Math.pow(t, 0.8); const y = (t*h)-halfH;
+                const rMax = Math.max(0.5, CONFIG.particles.treeRadius*(1.0-t));
+                const angle = t*50*Math.PI + Math.random()*Math.PI;
+                const r = rMax*(0.8+Math.random()*0.4);
+                this.posTree.set(Math.cos(angle)*r, y, Math.sin(angle)*r);
+                
+                // Initial placement
+                this.mesh.position.copy(this.posTree);
+            }
+            update(dt, mode, focusTargetMesh) {
+                let target = this.posTree;
+                if(mode === 'FOCUS') {
+                    if(this.mesh === focusTargetMesh) {
+                         // Bring to front
+                         const v = new THREE.Vector3(0, 0, 30); // Closer for mobile
+                         const inv = new THREE.Matrix4().copy(mainGroup.matrixWorld).invert();
+                         target = v.applyMatrix4(inv);
+                         this.mesh.lookAt(camera.position); // Face user
+                    } else {
+                        // Push others away slightly or keep tree shape? Keep tree shape but scale down
+                    }
+                }
+
+                // Smooth Move
+                this.mesh.position.lerp(target, 4.0 * dt);
+
+                // Rotation
+                if(this.type === 'GIFT') {
+                    this.mesh.rotation.x = Math.sin(clock.elapsedTime*2 + this.mesh.id)*0.2;
+                    if(mode !== 'FOCUS') this.mesh.rotation.y += dt;
+                } else if (this.type === 'PHOTO' && mode === 'TREE') {
+                    this.mesh.lookAt(0, this.mesh.position.y, 0); this.mesh.rotateY(Math.PI);
+                }
+
+                // Scaling & Interaction logic
+                let s = this.baseScale;
+                if(this.isDust) s = this.baseScale*(0.8+0.4*Math.sin(clock.elapsedTime*4+this.mesh.id));
+                else if (mode === 'FOCUS') {
+                    if(this.mesh === focusTargetMesh) {
+                         if(this.type === 'GIFT') {
+                             s = 2.0;
+                             // Open Lid
+                             if(this.mesh.userData.lid) {
+                                 this.mesh.userData.lid.position.lerp(new THREE.Vector3(0, 2.5, -0.5), 3*dt);
+                                 this.mesh.userData.lid.rotation.x = THREE.MathUtils.lerp(this.mesh.userData.lid.rotation.x, -Math.PI/4, 3*dt);
+                             }
+                             // Show Message Sprite
+                             if(this.mesh.userData.messageSprite) {
+                                 this.mesh.userData.messageSprite.scale.lerp(new THREE.Vector3(4, 2, 1), 3*dt);
+                                 this.mesh.userData.messageSprite.position.lerp(new THREE.Vector3(0, 2.0, 0), 3*dt);
+                             }
+                         } else if (this.type === 'PHOTO') {
+                             s = this.baseScale * 3.5; // Bigger photo
+                         }
+                    } else {
+                         s = this.baseScale * 0.5; // Dim others
+                         // Close logic for others
+                         if(this.type === 'GIFT' && this.mesh.userData.lid) {
+                             this.mesh.userData.lid.position.lerp(new THREE.Vector3(0, 1.0, 0), 5*dt);
+                             this.mesh.userData.lid.rotation.x = THREE.MathUtils.lerp(this.mesh.userData.lid.rotation.x, 0, 5*dt);
+                             if(this.mesh.userData.messageSprite) this.mesh.userData.messageSprite.scale.set(0,0,0);
+                         }
+                    }
+                } else {
+                     // Reset
+                     if(this.type === 'GIFT' && this.mesh.userData.lid) {
+                         this.mesh.userData.lid.position.lerp(new THREE.Vector3(0, 1.0, 0), 5*dt);
+                         this.mesh.userData.lid.rotation.x = THREE.MathUtils.lerp(this.mesh.userData.lid.rotation.x, 0, 5*dt);
+                         if(this.mesh.userData.messageSprite) this.mesh.userData.messageSprite.scale.set(0,0,0);
+                     }
+                }
+                
+                this.mesh.scale.lerp(new THREE.Vector3(s,s,s), 4*dt);
+            }
+        }
+
+        // --- Creation Functions (Duplicates) ---
+        function createGiftMesh() {
+            const root = new THREE.Group();
+            const body = new THREE.Group();
+            const boxGeo = new THREE.BoxGeometry(1.2, 1.0, 1.2); 
+            const boxMat = new THREE.MeshStandardMaterial({ color: Math.random()>0.5?0x550000:0x004400, roughness: 0.6, metalness: 0.1 });
+            const box = new THREE.Mesh(boxGeo, boxMat); box.position.y = 0.5; body.add(box);
+            const ribMat = new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.2, metalness: 0.8 });
+            body.add(new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.05, 0.3), ribMat).translateY(0.5));
+            body.add(new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.05, 1.25), ribMat).translateY(0.5));
+            root.add(body);
+            const lid = new THREE.Group(); lid.position.y = 1.0; 
+            lid.add(new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.2, 1.3), boxMat));
+            lid.add(new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.25, 0.3), ribMat));
+            lid.add(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 1.35), ribMat));
+            root.add(lid);
+            root.userData.lid = lid; root.userData.body = body;
+            return root;
+        }
+
+        function createGiftBoxes() {
+            for(let i=0; i<10; i++) {
+                const giftMesh = createGiftMesh();
+                mainGroup.add(giftMesh);
+                const h = CONFIG.particles.treeHeight * 0.7;
+                const y = (Math.random() * h) - (h/2);
+                const r = (CONFIG.particles.treeRadius * (1 - (y+h/2)/CONFIG.particles.treeHeight)) + 2.5;
+                const angle = Math.random() * Math.PI * 2;
+                
+                const msg = giftMessages[Math.floor(Math.random() * giftMessages.length)];
+                const sprite = createTextSprite(msg);
+                sprite.position.set(0, 1.5, 0); sprite.scale.set(0,0,0);
+                giftMesh.add(sprite); giftMesh.userData.messageSprite = sprite;
+
+                const p = new Particle(giftMesh, 'GIFT');
+                p.posTree.set(Math.cos(angle)*r, y, Math.sin(angle)*r);
+                particleSystem.push(p);
+            }
+        }
+        
+        function createTextSprite(message) {
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = 512; canvas.height = 256;
+            ctx.fillStyle = "#050510"; ctx.beginPath(); ctx.roundRect(10, 10, 492, 236, 40); ctx.fill();
+            ctx.strokeStyle = "#ffd700"; ctx.lineWidth = 10; ctx.stroke();
+            
+            ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.font = "bold 32px sans-serif";
+            
+            const words = message.split(' '); let line = ''; let lines = [];
+            for(let n=0; n<words.length; n++) {
+                let test = line + words[n] + ' ';
+                if(ctx.measureText(test).width > 450 && n>0) { lines.push(line); line = words[n]+' '; }
+                else line = test;
+            }
+            lines.push(line);
+            
+            let startY = 128 - ((lines.length-1)*40)/2;
+            lines.forEach((l, i) => ctx.fillText(l, 256, startY + i*40));
+
+            const tex = new THREE.CanvasTexture(canvas);
+            const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }); // DepthTest false for readability on top
+            return new THREE.Sprite(mat);
+        }
+
+        function createParticles() {
+            const sphereGeo = new THREE.SphereGeometry(0.5, 16, 16); 
+            const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55); 
+            const goldMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.champagneGold, metalness: 1.0, roughness: 0.1 });
+            const redMat = new THREE.MeshPhysicalMaterial({ color: CONFIG.colors.accentRed, metalness: 0.3, roughness: 0.2, clearcoat: 1.0 });
+            const greenMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.deepGreen, metalness: 0.2, roughness: 0.8 });
+            
+            for (let i = 0; i < CONFIG.particles.count; i++) {
+                const rand = Math.random();
+                let mesh, type;
+                if (rand < 0.40) { mesh = new THREE.Mesh(boxGeo, greenMat); type = 'BOX'; }
+                else if (rand < 0.70) { mesh = new THREE.Mesh(boxGeo, goldMat); type = 'GOLD_BOX'; }
+                else if (rand < 0.95) { mesh = new THREE.Mesh(sphereGeo, goldMat); type = 'GOLD_SPHERE'; }
+                else { mesh = new THREE.Mesh(sphereGeo, redMat); type = 'RED'; }
+
+                const s = 0.4 + Math.random() * 0.5;
+                mesh.scale.set(s,s,s);
+                mesh.rotation.set(Math.random()*6, Math.random()*6, Math.random()*6);
+                mainGroup.add(mesh);
+                particleSystem.push(new Particle(mesh, type, false));
+            }
+            
+            // Star
+            const starGeo = new THREE.OctahedronGeometry(1.5, 0);
+            const starMat = new THREE.MeshStandardMaterial({ color: 0xffdd88, emissive: 0xffaa00, emissiveIntensity: 1.0 });
+            const star = new THREE.Mesh(starGeo, starMat);
+            star.position.set(0, CONFIG.particles.treeHeight/2 + 1.2, 0);
+            mainGroup.add(star);
+            mainGroup.add(photoMeshGroup);
+        }
+        
+        function createDust() {
+            const geo = new THREE.TetrahedronGeometry(0.1, 0); // Bigger dust for mobile visibility
+            const mat = new THREE.MeshBasicMaterial({ color: 0xffeebb, transparent: true, opacity: 0.8 });
+            for(let i=0; i<CONFIG.particles.dustCount; i++) {
+                 const mesh = new THREE.Mesh(geo, mat);
+                 mesh.scale.setScalar(0.5 + Math.random());
+                 mainGroup.add(mesh);
+                 particleSystem.push(new Particle(mesh, 'DUST', true));
+            }
+        }
+        
+        function addPhotoToScene(texture) {
+            const frameGeo = new THREE.BoxGeometry(1.4, 1.4, 0.05);
+            const frameMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.champagneGold, metalness: 1.0, roughness: 0.1 });
+            const frame = new THREE.Mesh(frameGeo, frameMat);
+            let w = 1.2, h = 1.2;
+            if (texture.image) {
+                const aspect = texture.image.width / texture.image.height;
+                if (aspect > 1) h = w / aspect; else w = h * aspect;
+            }
+            const photo = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }));
+            photo.position.z = 0.04;
+            const group = new THREE.Group(); group.add(frame); group.add(photo);
+            frame.scale.set(w/1.2, h/1.2, 1);
+            const s = 0.8; group.scale.set(s,s,s);
+            photoMeshGroup.add(group);
+            particleSystem.push(new Particle(group, 'PHOTO', false));
+            updatePhotoLayout();
+        }
+        
+        function updatePhotoLayout() {
+            const photos = particleSystem.filter(p => p.type === 'PHOTO');
+            if (photos.length === 0) return;
+            const stepY = CONFIG.particles.treeHeight / (photos.length + 1);
+            photos.forEach((p, i) => {
+                const y = -CONFIG.particles.treeHeight/2 + stepY * (i+1);
+                const r = 6 + (photos.length-i)*0.2; 
+                const angle = i * 2.0;
+                p.posTree.set(Math.cos(angle)*r, y+2, Math.sin(angle)*r);
+            });
+        }
+
         function animate() {
             requestAnimationFrame(animate);
             const dt = clock.getDelta();
-            
-            controls.update(); // Orbit Controls
-
+            controls.update(); // Orbit
             particleSystem.forEach(p => p.update(dt, STATE.mode, STATE.focusTarget));
-            
-            // Main group subtle rotation if not controlled
-            // mainGroup.rotation.y += 0.05 * dt;
-
             composer.render();
         }
     </script>
