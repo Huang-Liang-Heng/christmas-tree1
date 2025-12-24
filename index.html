@@ -386,7 +386,7 @@
             </div>
             <div class="share-actions">
                 <button class="btn-modal btn-copy" id="btn-copy-link">Copy Link to Clipboard</button>
-                <button class="btn-modal btn-close" onclick="document.getElementById('share-modal').classList.remove('visible')">Close</button>
+                <button class="btn-modal btn-close" onclick="document.getElementById('share-modal').style.display='none'">Close</button>
             </div>
             
             <div class="modal-author">
@@ -1296,9 +1296,14 @@
                     
                     if(userName) nameInput.value = userName; // Pre-fill if exists
                     
-                    // Force display using class for specificity
+                    // Force display using inline styles (NUCLEAR OPTION)
+                    document.body.appendChild(modal); // Ensure it's top-level
+                    modal.style.display = 'flex';
+                    modal.style.opacity = '1';
+                    modal.style.zIndex = '2147483647'; // Max Int
                     modal.classList.add('visible');
-                    console.log("Modal displayed via class .visible");
+                    
+                    console.log("Modal displayed via inline styles & re-parenting");
 
                     // Copy Logic
                     copyBtn.onclick = () => {
