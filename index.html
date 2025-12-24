@@ -367,11 +367,21 @@
         ];
         
         const giftMessages = [
-            "🎁 A surprise gift of Joy! Have a wonderful year ahead!",
-            "🎁 You found a box of Laughter! Keep smiling!",
-            "🎁 This box contains Good Health! Wishing you the best!",
-            "🎁 A bundle of Success! May you achieve your goals!",
-            "🎁 Pure Happiness inside! Enjoy the moment!"
+            "🎁 Unboxing Joy: May your days be filled with endless laughter!",
+            "🎁 A Gift of Peace: Wishing you serene moments and quiet happiness.",
+            "🎁 Adventure Awaits: May the new year bring exciting journeys!",
+            "🎁 Sweetest Wishes: Hope your holidays are as sweet as cookies!",
+            "🎁 Golden Moments: Cherish every second with your loved ones!",
+            "🎁 Sparkle & Shine: May you glow with happiness all year round!",
+            "🎁 Cozy Vibes: Sending you warm hugs and hot cocoa dreams!",
+            "🎁 Dream Big: This box is packed with inspiration for your goals!",
+            "🎁 Love Wrapped Up: You are cherished more than you know!",
+            "🎁 Magic Inside: Believe in the wonder of the season!",
+            "🎁 Good Vibes Only: Radiating positivity your way!",
+            "🎁 A Bundle of Luck: May fortune smile upon you!",
+            "🎁 Creative Spark: unleashing your inner genius this year!",
+            "🎁 Friendship Goal: Grateful for you today and always!",
+            "🎁 Health & Harmony: Wishing you a vibrant and balanced life!"
         ];
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -669,7 +679,9 @@
                              }
                              // Show Message
                              if(this.mesh.userData.messageSprite) {
-                                 this.mesh.userData.messageSprite.scale.lerp(new THREE.Vector3(5, 2.5, 1), 3*dt);
+                                 // Float up just enough to clear the lid, but keep in view
+                                 this.mesh.userData.messageSprite.scale.lerp(new THREE.Vector3(4, 2, 1), 3*dt);
+                                 this.mesh.userData.messageSprite.position.lerp(new THREE.Vector3(0, 1.7, 0), 3*dt); // Lowered to 1.7
                                  this.mesh.userData.messageSprite.material.opacity = 1;
                              }
                          } else {
@@ -698,6 +710,7 @@
                          }
                          if(this.mesh.userData.messageSprite) {
                              this.mesh.userData.messageSprite.scale.set(0,0,0);
+                             this.mesh.userData.messageSprite.position.set(0, 1.5, 0);
                          }
                     }
                 }
@@ -736,28 +749,32 @@
             const ctx = canvas.getContext('2d');
             canvas.width = 512; canvas.height = 256;
             
-            // Background
-            ctx.fillStyle = "rgba(0,0,0,0.8)"; 
+            // Background - Solid Dark for maximum readability
+            ctx.fillStyle = "#050510"; // Almost black blue
             ctx.beginPath();
-            ctx.roundRect(10, 10, 492, 236, 30);
+            ctx.roundRect(10, 10, 492, 236, 40);
             ctx.fill();
-            ctx.strokeStyle = "#d4af37";
+            
+            // Border - Gold
+            ctx.strokeStyle = "#ffd700";
             ctx.lineWidth = 8;
             ctx.stroke();
 
-            // Text
-            ctx.font = "bold 40px 'Times New Roman'";
-            ctx.fillStyle = "#ffd700";
+            // Text Styles
             ctx.textAlign = "center";
-            ctx.shadowColor = "rgba(255,215,0,0.8)";
-            ctx.shadowBlur = 15;
+            ctx.textBaseline = "middle";
+            ctx.shadowColor = "transparent"; 
+
+            // Main Message Only - Larger and Centered
+            ctx.font = "bold 34px 'Segoe UI', Arial, sans-serif"; // Reduced from 44px
+            ctx.fillStyle = "#ffffff";
             
-            // Word Wrap
+            // Word Wrap Logic
             const words = message.split(' ');
             let line = '';
             let lines = [];
             const maxWidth = 450;
-            const lineHeight = 50;
+            const lineHeight = 42; // Reduced from 55
             
             for(let n = 0; n < words.length; n++) {
                 let testLine = line + words[n] + ' ';
@@ -772,13 +789,19 @@
             }
             lines.push(line);
             
-            const startY = 128 - ((lines.length-1) * lineHeight)/2;
+            // Vertically Center
+            let startY = 128 - ((lines.length-1) * lineHeight)/2;
+            
             for (let i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], 256, startY + (i * lineHeight));
             }
 
             const texture = new THREE.CanvasTexture(canvas);
-            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false, depthWrite: false }); // Always on top-ish? No, depthTest true is better for 3D.
+            // Actually, depthTest: false ensures it doesn't clip into the box, but might show through trees. 
+            // Let's keep depthTest true but position it high.
+            material.depthTest = true;
+            
             const sprite = new THREE.Sprite(material);
             sprite.scale.set(4, 2, 1);
             return sprite;
@@ -789,10 +812,10 @@
             
             // 1. Body Group
             const body = new THREE.Group();
-            const boxGeo = new THREE.BoxGeometry(1.2, 1.0, 1.2); // S slightly shorter
+            const boxGeo = new THREE.BoxGeometry(1.2, 1.0, 1.2); 
             const boxMat = new THREE.MeshStandardMaterial({ 
-                color: Math.random() > 0.5 ? 0xcc0000 : 0x00aa00, // Darker Red/Green
-                roughness: 0.3, metalness: 0.2 
+                color: Math.random() > 0.5 ? 0x550000 : 0x004400, // Very Dark Red/Green to reduce glare
+                roughness: 0.6, metalness: 0.1 
             });
             const box = new THREE.Mesh(boxGeo, boxMat);
             box.position.y = 0.5; // Sit on floor
