@@ -655,7 +655,7 @@
                     if (mode === 'TREE') s = 0; 
                 } else if (mode === 'SCATTER' && this.type === 'PHOTO') {
                     s = this.baseScale * 2.5; 
-                if (mode === 'FOCUS') {
+                } else if (mode === 'FOCUS') {
                     if (this.mesh === focusTargetMesh) {
                          // Focus Logic
                          if(this.type === 'GIFT') {
